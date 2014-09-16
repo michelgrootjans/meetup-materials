@@ -2,7 +2,9 @@
 
 
 defmodule ReduceList do
-
+  def by(list, :sum), do: List.foldl(list, 0, fn(x, acc) -> x + acc end)
+  def by(list, :multiplication), do: List.foldl(list, 1, fn(x, acc) -> x * acc end)
+  def by(list, :concatenation),  do: List.foldl(list, "", fn(x, acc) -> x <> acc end)
 end
 
 

@@ -18,6 +18,22 @@ defmodule RomanNumeral do
     roman_numeral |> String.codepoints |> _convert
   end
 
+  defp _convert([n | []]), do: roman_digit_to_decimal(n)
+
+  defp _convert([n1, n2 | tail]) do
+    arabic1 = roman_digit_to_decimal(n1)
+    arabic2 = roman_digit_to_decimal(n2)
+    if(arabic1 < arabic2) do
+      _convert([ n2 | tail]) - arabic1
+    else
+      _convert([ n2 | tail]) + arabic1
+    end
+  end
+
+  defp _convert([n | tail]) do
+    _convert(tail) + roman_digit_to_decimal(n)
+  end
+
   defp roman_digit_to_decimal("I"), do:    1
   defp roman_digit_to_decimal("V"), do:    5
   defp roman_digit_to_decimal("X"), do:   10
@@ -27,22 +43,6 @@ defmodule RomanNumeral do
   defp roman_digit_to_decimal("M"), do: 1000
   defp roman_digit_to_decimal(_),   do: raise "wat?"
 
-
-  # OR:
-
-  # defp roman_digit_to_decimal(digit) do
-  #   case digit do
-  #     "I" ->    1
-  #     "V" ->    5
-  #     "X" ->   10
-  #     "L" ->   50
-  #     "C" ->  100
-  #     "D" ->  500
-  #     "M" -> 1000
-  #   end
-  # end
-
-
 end
 
 ExUnit.start
@@ -50,17 +50,20 @@ ExUnit.start
 defmodule RomanNumeralTest do
   use ExUnit.Case
 
-  test "convertion works" do
-
-    assert RomanNumeral.convert("XX")     == 20
-    assert RomanNumeral.convert("XXII")   == 22
-    assert RomanNumeral.convert("IV")     == 4
-    assert RomanNumeral.convert("V")      == 5
-    assert RomanNumeral.convert("VI")     == 6
-    assert RomanNumeral.convert("VII")    == 7
-    assert RomanNumeral.convert("IX")     == 9
-    assert RomanNumeral.convert("XI")     == 11
-    assert RomanNumeral.convert("MDDXIV") == 2014
-
-  end
+  test "I",      do: assert RomanNumeral.convert("I")      == 1
+  test "II",     do: assert RomanNumeral.convert("II")     == 2
+  test "III",    do: assert RomanNumeral.convert("III")    == 3
+  test "IIII",   do: assert RomanNumeral.convert("IIII")   == 4
+  test "IV",     do: assert RomanNumeral.convert("IV")     == 4
+  test "V",      do: assert RomanNumeral.convert("V")      == 5
+  test "VI",     do: assert RomanNumeral.convert("VI")     == 6 
+  test "VII",    do: assert RomanNumeral.convert("VII")    == 7
+  test "VIII",   do: assert RomanNumeral.convert("VIII")   == 8
+  test "IX",     do: assert RomanNumeral.convert("IX")     == 9
+  test "X",      do: assert RomanNumeral.convert("X")      == 10
+  test "XI",     do: assert RomanNumeral.convert("XI")     == 11
+  test "XX",     do: assert RomanNumeral.convert("XX")     == 20
+  test "XXII",   do: assert RomanNumeral.convert("XXII")   == 22
+  test "MMXIV",  do: assert RomanNumeral.convert("MMXIV")  == 2014
+  test "MDDXIV", do: assert RomanNumeral.convert("MDDXIV") == 2014
 end
